@@ -115,7 +115,7 @@ export default function Dropdown() {
           <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-10 max-h-60 overflow-y-auto">
             {options.length > 0 ? (
               <div className="py-2">
-                {options.map((option) => (
+                {options.filter((option) => !option.disabled).map((option) => (
                   <div
                     key={option.value}
                     className={`px-4 py-2 text-gray-700 ${option.disabled
@@ -130,11 +130,6 @@ export default function Dropdown() {
                     }}
                   >
                     {option.label}
-                    {option.disabled && (
-                      <span className="ml-2 text-xs text-gray-500 italic">
-                        {t('common.comingSoon')}
-                      </span>
-                    )}
                   </div>
                 ))}
               </div>

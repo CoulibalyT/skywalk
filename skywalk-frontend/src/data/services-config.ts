@@ -303,5 +303,6 @@ export const getServicesWithTools = (t: TFunction): ServiceConfig[] => {
 };
 
 export const getServicesForIndex = (t: TFunction): ServiceConfig[] => {
-  return Object.values(getServicesConfig(t)).filter(service => service.hasTools === true || service.comingSoon === true);
+  // Les services « à venir » ne sont plus listés (retour de recette : on n'annonce pas ce qui n'existe pas).
+  return Object.values(getServicesConfig(t)).filter(service => service.hasTools === true && !service.comingSoon);
 };

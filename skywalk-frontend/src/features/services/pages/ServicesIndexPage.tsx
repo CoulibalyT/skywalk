@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { getServicesForIndex } from '../../../data/services-config';
-import { ArrowRight, Lock } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { PageHeader } from '../../../components/PageHeader';
 import { useTranslation } from 'react-i18next';
 
@@ -17,38 +17,8 @@ export default function ServicesIndexPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => {
+          {services.filter((service) => !service.comingSoon).map((service) => {
             const Icon = service.icon;
-
-            if (service.comingSoon) {
-              return (
-                <div
-                  key={service.id}
-                  className="relative block bg-gray-50 rounded-2xl border border-gray-200 p-8 opacity-60 cursor-default select-none"
-                >
-                  <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1 bg-gray-200 rounded-full">
-                    <Lock className="w-3 h-3 text-gray-600" />
-                    <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">
-                      {t('services.indexPage.comingSoon', 'À venir')}
-                    </span>
-                  </div>
-
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-14 h-14 rounded-xl bg-gray-200 flex items-center justify-center">
-                      <Icon className="w-7 h-7 text-gray-400" strokeWidth={1.5} />
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-gray-500 mb-3">
-                    {service.title}
-                  </h3>
-
-                  <p className="text-gray-500 leading-relaxed mb-4 line-clamp-3">
-                    {service.description}
-                  </p>
-                </div>
-              );
-            }
 
             return (
               <Link 

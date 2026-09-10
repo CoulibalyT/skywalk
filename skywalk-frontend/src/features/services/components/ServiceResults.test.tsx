@@ -38,11 +38,9 @@ describe('ServiceResults', () => {
     );
   });
 
-  it('shows a disabled coming-soon state for a non-emploi category', () => {
-    renderResults('logement', 'Logement');
-    expect(screen.getByText('services.serviceResults.comingSoon.title')).toBeInTheDocument();
-    const button = screen.getByText('services.serviceResults.comingSoon.button').closest('button');
-    expect(button).toBeDisabled();
+  it('renders nothing for a category without a search engine (no « coming soon » card)', () => {
+    const { container } = renderResults('logement');
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('does not render the recent/popular quick links outside the emploi category', () => {

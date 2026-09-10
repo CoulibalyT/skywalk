@@ -38,11 +38,11 @@ describe('Dropdown', () => {
     expect(screen.getAllByText('Japon').length).toBeGreaterThan(0);
   });
 
-  it('does not select a disabled category option', () => {
+  it('n’affiche plus les options « bientôt disponible » dans la liste', () => {
     render(<Dropdown />);
     fireEvent.click(screen.getByText('landing.search.category').closest('div[class*="cursor-pointer"]')!);
-    fireEvent.click(screen.getByText('landing.search.options.housing'));
-    // still shows the default "job" category, not housing (dropdown stays open on a disabled pick)
+    // « housing » était grisée « bientôt disponible » : elle n'est plus listée du tout.
+    expect(screen.queryByText('landing.search.options.housing')).not.toBeInTheDocument();
     expect(screen.getAllByText('landing.search.options.job').length).toBeGreaterThan(0);
   });
 

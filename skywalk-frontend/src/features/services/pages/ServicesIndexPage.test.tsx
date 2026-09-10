@@ -37,9 +37,9 @@ describe('ServicesIndexPage', () => {
     expect(link).toHaveAttribute('href', '/services/emploi');
   });
 
-  it('renders a coming-soon service as a non-clickable, locked card', () => {
+  it('n’affiche plus les services « à venir » (retour de recette : on n’annonce pas ce qui n’existe pas)', () => {
     renderPage();
-    expect(screen.getByText('Business').closest('a')).toBeNull();
-    expect(screen.getByText('À venir')).toBeInTheDocument();
+    expect(screen.queryByText('Business')).not.toBeInTheDocument();
+    expect(screen.queryByText('À venir')).not.toBeInTheDocument();
   });
 });

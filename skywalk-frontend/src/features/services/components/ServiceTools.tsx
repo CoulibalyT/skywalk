@@ -137,7 +137,7 @@ function ToolContainer({ title, description, tools, activeToolId, onToolChange, 
       </div>
 
       <div className="px-4 py-3 space-y-1 border-b border-gray-100">
-        {tools.map((tool) => (
+        {tools.filter((tool) => !tool.comingSoon).map((tool) => (
           <button
             key={tool.id}
             onClick={() => tool.active && onToolChange(tool.id)}
@@ -150,11 +150,6 @@ function ToolContainer({ title, description, tools, activeToolId, onToolChange, 
           >
             <tool.icon className={`w-4 h-4 ${activeToolId === tool.id ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'}`} />
             <span className="flex-1 text-left">{tool.label}</span>
-            {tool.comingSoon && (
-              <span className="text-[10px] font-bold px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded border border-gray-200">
-                {t('common.comingSoon')}
-              </span>
-            )}
           </button>
         ))}
       </div>

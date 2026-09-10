@@ -9,6 +9,10 @@ interface ServiceResultsProps {
 
 export default function ServiceResults({ category, title }: ServiceResultsProps) {
   const { t } = useTranslation();
+  // Retour de recette : « tout ce qui est bientôt disponible, on le commente ».
+  // Seul « emploi » a un moteur de recherche ; pour les autres catégories, on
+  // n'affiche plus la carte « Bientôt disponible » — rien du tout.
+  if (category !== 'emploi') return null;
   return (
     <section>
       <div className="flex items-center justify-between mb-6">
@@ -38,22 +42,7 @@ export default function ServiceResults({ category, title }: ServiceResultsProps)
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </>
-          ) : (
-            <>
-              <h3 className="text-xl font-semibold text-gray-500 mb-3">
-                {t('services.serviceResults.comingSoon.title', 'Bientôt disponible')}
-              </h3>
-              <p className="text-gray-500 mb-6">
-                {t('services.serviceResults.comingSoon.description', `Notre moteur de recherche pour "${title.toLowerCase()}" est en cours de développement.`)}
-              </p>
-              <button
-                disabled
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-gray-100 text-gray-500 rounded-lg cursor-not-allowed font-medium border border-gray-200"
-              >
-                <span>{t('services.serviceResults.comingSoon.button', 'Recherche indisponible')}</span>
-              </button>
-            </>
-          )}
+          ) : null}
         </div>
       </div>
 
