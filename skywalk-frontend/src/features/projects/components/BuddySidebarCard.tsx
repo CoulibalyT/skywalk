@@ -116,9 +116,10 @@ export default function BuddySidebarCard({
               <p className="text-xs text-gray-700 font-medium truncate">
                 {row.firstname}
                 {row.originCountry && (
-                  // Pays d'ORIGINE du buddy (pas sa destination), dans la langue de
-                  // l'interface : « Tene – Germany » se lisait comme une destination.
-                  <span className="text-gray-500 font-normal" title="Pays d’origine"> – {countryName(row.originCountry)}</span>
+                  // Pays d'ORIGINE du buddy — tous vont vers la même destination que le
+                  // lecteur. « Tene – Allemagne » sur un projet Suisse se lisait quand même
+                  // comme une destination : le mot « origine » lève l'ambiguïté.
+                  <span className="text-gray-500 font-normal" title="Pays d’origine"> · origine : {countryName(row.originCountry)}</span>
                 )}
               </p>
               <p className="text-[11px] text-gray-500 truncate">

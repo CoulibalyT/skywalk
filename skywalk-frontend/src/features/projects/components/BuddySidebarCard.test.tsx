@@ -113,7 +113,7 @@ describe('BuddySidebarCard', () => {
   it('traduit le pays d’origine du buddy', async () => {
     mockedGetBuddies.mockResolvedValue([{ ...buddy(7, 'Tene', '2026-08-01'), originCountry: 'Germany' }]);
     renderCard();
-    expect(await screen.findByText(/– Allemagne/)).toBeInTheDocument();
+    expect(await screen.findByText(/origine : Allemagne/)).toBeInTheDocument();
     expect(screen.queryByText(/Germany/)).not.toBeInTheDocument();
   });
 });
