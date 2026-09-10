@@ -168,4 +168,26 @@ describe('SummaryStep', () => {
     const button = screen.getByText('onboarding.summary.creatingLabel').closest('button')!;
     expect(button).toBeDisabled();
   });
+
+  // Retour de recette : « Ville cible : 11 ». L'API refusait le slug français
+  // (« suisse ») → 404, aucune ville, identifiant affiché tel quel.
+  it('interroge la destination par code ISO, jamais par le slug français', async () => {
+    mockedGetBySlug.mockResolvedValue({ cities: [] } as any);
+    renderStep();
+    await waitFor(() => expect(mockedGetBySlug).toHaveBeenCalledWith(baseData.destination.toCountry));
+  });
+
+  it('retrouve la ville par idCity, la clé réellement renvoyée par l’API', async () => {
+    mockedGetBySlug.mockResolvedValue({ cities: [{ idCity: 11, name: 'Lausanne' }] } as any);
+    renderStep({ ...baseData, destination: { ...baseData.destination, targetCity: '11' } });
+    expect(await screen.findByText('Lausanne')).toBeInTheDocument();
+  });
+
+  it('n’affiche jamais un identifiant nu quand la ville est introuvable', async () => {
+    mockedGetBySlug.mockResolvedValue({ cities: [] } as any);
+    renderStep({ ...baseData, destination: { ...baseData.destination, targetCity: '11' } });
+    // La mock traduit la clé en « Not specified » ; d'autres champs vides l'affichent aussi.
+    expect((await screen.findAllByText('Not specified')).length).toBeGreaterThan(0);
+    expect(screen.queryByText('11')).not.toBeInTheDocument();
+  });
 });

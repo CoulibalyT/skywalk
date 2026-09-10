@@ -6,7 +6,7 @@ import SummaryCard from '../ui/SummaryCard'
 import WizardNav from '../components/WizardNav'
 import { COUNTRIES } from '../data/constants'
 import { destinationsApi } from '../../../api/destinations'
-import { SUPPORTED_COUNTRIES } from '../../../data/supportedCountries'
+import { getCityId } from '../../destinations/cityId'
 import { nationalityLabel } from '../../../data/freeMovement'
 
 interface AllStepsData {
@@ -75,21 +75,26 @@ export default function SummaryStep({ data, onBack, onEdit, onComplete, isSubmit
     [i18n.language, notSet]
   )
 
-  const selectedCountrySlug = useMemo(() => {
-    return SUPPORTED_COUNTRIES.find(c => c.code === data.destination.toCountry)?.slug;
-  }, [data.destination.toCountry]);
+  // Retour de recette : « Ville cible : 11 ». On interrogeait l'API avec le slug
+  // FRANÇAIS du registre (« suisse », « japon », « etats-unis ») alors qu'elle
+  // n'accepte que le code ISO ou le nom anglais : 404, aucune ville chargée, et
+  // l'identifiant s'affichait tel quel. Seule la France passait, par coïncidence.
+  // Le code ISO est déjà sous la main — c'est lui qu'on envoie.
+  const destinationCode = data.destination.toCountry || undefined;
 
   const { data: countryDetail } = useQuery({
-    queryKey: ['destination', selectedCountrySlug],
-    queryFn: () => destinationsApi.getBySlug(selectedCountrySlug!),
-    enabled: !!selectedCountrySlug,
+    queryKey: ['destination', destinationCode],
+    queryFn: () => destinationsApi.getBySlug(destinationCode!),
+    enabled: !!destinationCode,
   });
 
   const targetCityName = useMemo(() => {
     if (!data.destination.targetCity) return t('onboarding.summary.notSpecified');
     const cityId = parseInt(data.destination.targetCity, 10);
-    if (!isNaN(cityId) && countryDetail?.cities) {
-      const city = countryDetail.cities.find(c => (c.id === cityId || c.city_id === cityId));
+    if (!isNaN(cityId)) {
+      // L'API renvoie idCity (parfois city_id ou id) : même clé partout.
+      const city = countryDetail?.cities?.find((c) => getCityId(c) === cityId);
+      // Un identifiant nu n'est jamais une réponse acceptable pour l'utilisateur.
       return city ? city.name : t('onboarding.summary.notSpecified');
     }
     // Fallback support for legacy drafts storing the name directly
