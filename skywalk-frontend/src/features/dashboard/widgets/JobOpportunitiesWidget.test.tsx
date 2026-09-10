@@ -177,4 +177,16 @@ describe('JobOpportunitiesWidget', () => {
     await waitFor(() => expect(screen.getByText('Dev')).toBeInTheDocument());
     expect(screen.getByText('40,000–55,000 EUR')).toBeInTheDocument();
   });
+
+  // Retour de recette : « priorité au visa de travail » pour une Française → Suisse.
+  it('ne parle pas de visa de travail quand la libre circulation s’applique', () => {
+    renderWidget({ hasJobOffer: true, projectId: 9, nationality: 'FR', countryData: { code: 'CH', name: 'Suisse' } as any });
+    expect(screen.getByText(/déjà décrochée/)).toBeInTheDocument();
+    expect(screen.queryByText(/visa de travail/)).not.toBeInTheDocument();
+  });
+
+  it('parle du visa de travail quand la destination l’exige', () => {
+    renderWidget({ hasJobOffer: true, projectId: 9, nationality: 'FR', countryData: { code: 'JP', name: 'Japon' } as any });
+    expect(screen.getByText(/visa de travail/)).toBeInTheDocument();
+  });
 });

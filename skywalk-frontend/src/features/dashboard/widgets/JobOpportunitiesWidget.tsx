@@ -8,6 +8,7 @@ import Widget from './Widget'
 import { useTranslation } from 'react-i18next'
 import type { WidgetSize } from '../hooks/useDashboardPreferences'
 
+import { isVisaExempt } from '../../../data/freeMovement'
 interface JobOpportunitiesWidgetProps {
   countryData?: CountryData | null
   userProfile?: {
@@ -18,6 +19,8 @@ interface JobOpportunitiesWidgetProps {
   }
   /** Une offre déjà en poche → on arrête de pousser la recherche d'emploi. */
   hasJobOffer?: boolean | null
+  /** Nationalité du projet : décide si l'on parle de visa de travail ou non. */
+  nationality?: string | null
   projectId?: number
   onEdit?: () => void
   onHide?: () => void
@@ -74,6 +77,7 @@ export default function JobOpportunitiesWidget({
   countryData,
   userProfile,
   hasJobOffer,
+  nationality,
   projectId,
   onEdit,
   onHide,
@@ -123,6 +127,9 @@ export default function JobOpportunitiesWidget({
   // Offre déjà décrochée → inutile de pousser la recherche d'emploi : on oriente vers
   // le visa de travail (la promesse faite à l'onboarding « hasJobOffer »).
   if (hasJobOffer) {
+    // Retour de recette : « priorité au visa de travail » affiché à une Française
+    // partant en Suisse. Même règle que la carte « Libre circulation ».
+    const visaExempt = isVisaExempt(nationality, countryData?.code)
     return (
       <Widget
         title={t('dashboard.personalized.widgets.jobOpportunities.title', { country: countryData?.name || '' })}
@@ -137,7 +144,12 @@ export default function JobOpportunitiesWidget({
           <BadgeCheck className="w-9 h-9 text-emerald-600 mx-auto" />
           <p className="font-semibold text-emerald-800">Offre d'emploi déjà décrochée</p>
           <p className="text-sm text-emerald-700/90">
-            Pas besoin de chercher un job — priorité au <span className="font-semibold">visa de travail</span> et aux démarches d'installation.
+            Pas besoin de chercher un job — priorité{' '}
+            {visaExempt ? (
+              <>aux <span className="font-semibold">démarches d'installation</span>.</>
+            ) : (
+              <>au <span className="font-semibold">visa de travail</span> et aux démarches d'installation.</>
+            )}
           </p>
           {projectId != null && (
             <Link
