@@ -296,7 +296,11 @@ jobs:
     name: Deploy Backend (Heroku)
     runs-on: ubuntu-latest
     needs: [backend-build]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    # Un seul dépôt déploie : CoulibalyT/skywalk, où vivent les six secrets
+    # Heroku/Vercel. Sur tout autre clone (GitLab ETNA, heymivii/GPE…) le job
+    # est SAUTÉ au lieu d'échouer faute de secrets — et personne ne peut
+    # déclencher un second déploiement de la même app par mégarde.
+    if: github.repository == 'CoulibalyT/skywalk' && github.event_name == 'push' && github.ref == 'refs/heads/develop'
     steps:
       - uses: actions/checkout@v4
 
@@ -325,7 +329,11 @@ jobs:
     name: Deploy Frontend (Vercel)
     runs-on: ubuntu-latest
     needs: [frontend-build]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    # Un seul dépôt déploie : CoulibalyT/skywalk, où vivent les six secrets
+    # Heroku/Vercel. Sur tout autre clone (GitLab ETNA, heymivii/GPE…) le job
+    # est SAUTÉ au lieu d'échouer faute de secrets — et personne ne peut
+    # déclencher un second déploiement de la même app par mégarde.
+    if: github.repository == 'CoulibalyT/skywalk' && github.event_name == 'push' && github.ref == 'refs/heads/develop'
     # Pas de working-directory : le projet Vercel a « Root Directory =
     # skywalk-frontend » dans ses réglages ; se placer soi-même dans le dossier
     # faisait chercher skywalk-frontend/skywalk-frontend au deploy.
