@@ -201,7 +201,7 @@ export default function CountdownWidget({
                 {arrivalIncomplete > 0
                   ? t('dashboard.personalized.widgets.countdown.prepDone', {
                       defaultValue:
-                        'Préparation terminée — les démarches sur place vous attendent à l’arrivée',
+                        'Préparation terminée — il vous reste les autres démarches',
                     })
                   : t('dashboard.personalized.widgets.countdown.allDone', {
                       defaultValue: 'Toutes vos démarches sont à jour',

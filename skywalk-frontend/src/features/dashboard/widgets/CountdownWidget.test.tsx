@@ -148,7 +148,7 @@ describe('CountdownWidget', () => {
     } as any);
     renderWidget({ departureDate: '2026-01-31T00:00:00Z' });
     expect(
-      screen.getByText(/Préparation terminée — les démarches sur place vous attendent à l’arrivée/),
+      screen.getByText(/Préparation terminée — il vous reste les autres démarches/),
     ).toBeInTheDocument();
   });
 

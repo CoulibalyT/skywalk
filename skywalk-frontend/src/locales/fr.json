@@ -1603,7 +1603,8 @@
             "finance": "Finance",
             "arrival": "Arrivée",
             "integration": "Intégration"
-          }
+          },
+          "otherSteps": "Démarches"
         },
         "budgetTracker": {
           "title": "Analyse Budget",
@@ -1722,7 +1723,7 @@
           "late": "En retard",
           "seeChecklist": "Voir ma checklist",
           "allDone": "Toutes vos démarches sont à jour",
-          "prepDone": "Préparation terminée — les démarches sur place vous attendent à l’arrivée"
+          "prepDone": "Préparation terminée — il vous reste les autres démarches"
         },
         "requiredDocuments": {
           "title": "Documents requis",

@@ -1603,7 +1603,8 @@
             "finance": "Finance",
             "arrival": "Arrival",
             "integration": "Integration"
-          }
+          },
+          "otherSteps": "Other steps"
         },
         "budgetTracker": {
           "title": "Budget Analysis",
@@ -1722,7 +1723,7 @@
           "late": "Overdue",
           "seeChecklist": "View my checklist",
           "allDone": "All your steps are up to date",
-          "prepDone": "Preparation complete — your on-site steps await you on arrival"
+          "prepDone": "Preparation done — the other steps remain"
         },
         "requiredDocuments": {
           "title": "Required documents",

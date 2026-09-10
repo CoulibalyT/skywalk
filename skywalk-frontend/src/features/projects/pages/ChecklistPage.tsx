@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircle, Circle, ChevronDown, ChevronRight, ExternalLink, ArrowLeft, ArrowRight, List, Calendar, AlertCircle, AlertTriangle, Plane, Home, Lightbulb } from 'lucide-react';
+import { CheckCircle, Circle, ChevronDown, ChevronRight, ExternalLink, ArrowLeft, ArrowRight, List, Calendar, AlertCircle, AlertTriangle, Plane, Lightbulb } from 'lucide-react';
 // DOCUMENTS DÉSACTIVÉS : Paperclip et DocumentsVault ne servaient qu'au panneau par étape.
 // import DocumentsVault from '../../documents/DocumentsVault';
 import { useProject } from '../hooks/useProjectMutations';
@@ -189,11 +189,6 @@ function ChecklistItemRow({
                   departureDate={departureDate}
                   phase={item.phase}
                 />
-                {item.phase === 'on_arrival' && (
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
-                    À faire sur place
-                  </span>
-                )}
               </>
             )}
             {item.completed && item.completedAt && (
@@ -700,7 +695,7 @@ export default function ChecklistPage() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
-                    <Home className="w-4 h-4 text-gray-400" /> Sur place — {arrivalDone} / {arrivalTotal}
+                    <List className="w-4 h-4 text-gray-400" /> Démarches — {arrivalDone} / {arrivalTotal}
                   </span>
                   <span className="text-sm font-bold text-gray-900">{pct(arrivalDone, arrivalTotal)}%</span>
                 </div>
@@ -733,10 +728,6 @@ export default function ChecklistPage() {
                       }`}>
                         <Calendar className="w-3 h-3" />
                         avant le {nextActionDeadline.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
-                      </span>
-                    ) : nextAction.phase === 'on_arrival' ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500">
-                        <Home className="w-3 h-3" /> à faire à l'arrivée
                       </span>
                     ) : null}
                     {/* Pas de TrustBadge ici : trop large pour la sidebar, il est déjà
@@ -901,11 +892,14 @@ export default function ChecklistPage() {
               </div>
             )}
 
-            {/* ---- Section : À l'arrivée ---- */}
+            {/* ---- Section : Démarches ----
+                Retour de recette : hors visa, presque tout peut se faire avant OU après
+                l'arrivée. L'étiquette « sur place » induisait en erreur : seul le visa
+                garde une phase (« Avant le départ »), le reste est simplement « Démarches ». */}
             {arrivalSteps.length > 0 && (
               <div>
                 <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Home className="w-3.5 h-3.5" /> À l'arrivée
+                  <List className="w-3.5 h-3.5" /> Démarches
                   <span className="text-gray-500 font-normal normal-case tracking-normal">({arrivalSteps.length})</span>
                 </h2>
                 <div className="space-y-2">

@@ -334,7 +334,8 @@ describe('ChecklistPage', () => {
     } as any);
     renderPage();
 
-    const arrivalHeading = screen.getByText(/À l'arrivée/);
+    // « Démarches » est aussi dans la barre latérale : on vise le titre de section.
+    const arrivalHeading = screen.getByRole('heading', { level: 2, name: /^Démarches/ });
     expect(arrivalHeading).toBeInTheDocument();
     expect(within(arrivalHeading.parentElement!.parentElement!).getByText('Arrival step')).toBeInTheDocument();
 

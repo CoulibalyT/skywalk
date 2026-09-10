@@ -1,5 +1,5 @@
 import Widget from './Widget';
-import { CheckCircle, Circle, ChevronDown, ChevronRight, ExternalLink, ArrowRight, AlertCircle, Calendar, Plane, Home } from 'lucide-react';
+import { CheckCircle, Circle, ChevronDown, ChevronRight, ExternalLink, ArrowRight, AlertCircle, Calendar, Plane, List } from 'lucide-react';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { CountryData } from '../../../hooks/useCountryData';
@@ -174,11 +174,6 @@ function ChecklistItemCard({
                   departureDate={departureDate}
                   phase={item.phase}
                 />
-                {item.phase === 'on_arrival' && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-500 whitespace-nowrap">
-                    {t(`${CK}.onSite`)}
-                  </span>
-                )}
               </>
             )}
           </div>
@@ -526,7 +521,7 @@ export default function ChecklistWidget({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-700">
-                  <Home className="w-3.5 h-3.5 text-gray-400" /> {t(`${CK}.onArrival`)}
+                  <List className="w-3.5 h-3.5 text-gray-400" /> {t(`${CK}.otherSteps`)}
                 </span>
                 <span className="text-sm font-semibold text-gray-900">
                   {phase.arrivalDone}/{phase.arrivalTotal}
@@ -612,7 +607,7 @@ export default function ChecklistWidget({
           {remainingArrival.length > 0 && (
             <div className="space-y-1.5">
               <p className="inline-flex items-center gap-1 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">
-                <Home className="w-3 h-3" /> {t(`${CK}.onArrival`)}
+                <List className="w-3 h-3" /> {t(`${CK}.otherSteps`)}
               </p>
               {remainingArrival.map((item) => (
                 <ChecklistItemCard
