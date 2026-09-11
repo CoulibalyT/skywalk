@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, ShieldCheck, ExternalLink } from 'lucide-react';
 import { isVisaExempt } from '../data/freeMovement';
+import { useCountryName, useCountryNameIn } from '../hooks/useCountryName';
 
 interface Props {
   nationality?: string | null;
@@ -24,8 +25,19 @@ export default function VisaNotice({
   className = '',
 }: Props) {
   const { t } = useTranslation();
-  const country =
-    destinationName || t('visaNotice.thisCountry', { defaultValue: 'ce pays' });
+  const localized = useCountryName();
+  const countryIn = useCountryNameIn();
+  // La base stocke le nom anglais (« Switzerland ») : la phrase disait
+  // « installer en Switzerland ». On passe par la forme avec préposition
+  // (« en Suisse », « au Japon », « aux États-Unis ») ; si le pays est inconnu
+  // du registre, on garde un « en » générique devant le nom traduit.
+  const country = (() => {
+    if (!destinationName) return t('visaNotice.thisCountry', { defaultValue: 'dans ce pays' });
+    const withPreposition = countryIn(destinationName);
+    const bare = localized(destinationName);
+    if (withPreposition !== bare && withPreposition !== destinationName) return withPreposition;
+    return t('visaNotice.inCountry', { country: bare, defaultValue: 'en {{country}}' });
+  })();
 
   // Fait vérifié (droit de libre circulation) → aucune démarche visa.
   if (isVisaExempt(nationality, destinationIso)) {
@@ -38,7 +50,7 @@ export default function VisaNotice({
           {t('visaNotice.exempt', {
             country,
             defaultValue:
-              'Libre circulation — aucun visa n’est requis pour vous installer en {{country}} (ressortissant·e UE/EEE/CH).',
+              'Libre circulation — aucun visa n’est requis pour vous installer {{country}} (ressortissant·e UE/EEE/CH).',
           })}
         </p>
       </div>
@@ -57,12 +69,12 @@ export default function VisaNotice({
             ? t('visaNotice.required', {
                 country,
                 defaultValue:
-                  'Installation : un visa long séjour est requis pour vous installer en {{country}} (≠ un simple séjour touristique).',
+                  'Installation : un visa long séjour est requis pour vous installer {{country}} (≠ un simple séjour touristique).',
               })
             : t('visaNotice.check', {
                 country,
                 defaultValue:
-                  'Selon votre nationalité, un visa long séjour peut être requis pour vous installer en {{country}}.',
+                  'Selon votre nationalité, un visa long séjour peut être requis pour vous installer {{country}}.',
               })}
         </p>
         {sourceUrl && (

@@ -2,10 +2,20 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import VisaNotice from './VisaNotice';
 
+// Le registre des pays n'est peuplé qu'à l'exécution (pays actifs de l'API) :
+// en test, on ne fait connaître que la Suisse, sous son nom anglais stocké en base.
+vi.mock('../data/countryMappings', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../data/countryMappings')>()),
+  resolveCountry: (name?: string | null) =>
+    name === 'Switzerland' ? { i18nKey: 'countries.switzerland', name: 'Switzerland', code: 'CH' } : undefined,
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, opts?: any) => {
-      const template = opts?.defaultValue ?? key;
+      // Formes avec préposition, comme dans fr.json (bloc countriesIn).
+      const table: Record<string, string> = { 'countriesIn.switzerland': 'en Suisse', 'countriesIn.france': 'en France' };
+      const template = table[key] ?? opts?.defaultValue ?? key;
       return opts?.country ? template.replace('{{country}}', opts.country) : template;
     },
   }),
@@ -63,5 +73,17 @@ describe('VisaNotice', () => {
       <VisaNotice nationality="FR" destinationIso="DE" className="custom-class" />,
     );
     expect(container.firstChild).toHaveClass('custom-class');
+  });
+
+  it('met la préposition devant le pays : « en Suisse », jamais « en Switzerland »', () => {
+    // La base stocke le nom anglais : c'est ce que reçoit le composant en prod.
+    render(<VisaNotice nationality="FR" destinationIso="CH" destinationName="Switzerland" />);
+    expect(screen.getByText(/installer en Suisse/)).toBeInTheDocument();
+    expect(screen.queryByText(/Switzerland/)).not.toBeInTheDocument();
+  });
+
+  it('garde un « en » générique devant un pays absent du registre', () => {
+    render(<VisaNotice nationality="US" destinationIso="XX" destinationName="Atlantide" />);
+    expect(screen.getByText(/installer en Atlantide/)).toBeInTheDocument();
   });
 });
