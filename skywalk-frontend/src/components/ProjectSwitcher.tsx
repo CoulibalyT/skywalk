@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronDown, Plane, Check, Plus } from 'lucide-react';
 import { useProjects } from '../features/projects/hooks/useProjectMutations';
 import { useActiveProject } from '../contexts/ActiveProjectContext';
+import { useCountryName } from '../hooks/useCountryName';
 
 /**
  * Site-wide active-project switcher (NavBar). Lets a signed-in user pick which expatriation
@@ -15,6 +16,7 @@ export default function ProjectSwitcher() {
   const navigate = useNavigate();
   const { data: projects = [] } = useProjects();
   const { activeProjectId, setActiveProjectId } = useActiveProject();
+  const countryName = useCountryName();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -37,7 +39,10 @@ export default function ProjectSwitcher() {
   if (projects.length === 0) return null;
 
   const active = projects.find((p) => p.idProject === activeProjectId) ?? projects[projects.length - 1];
-  const label = (p: typeof active) => p?.destinationCountry?.countryName || t('nav.myProject', { defaultValue: 'Mon projet' });
+  // La base stocke les noms de pays en anglais : « Switzerland » s'affichait
+  // tel quel dans la barre d'une interface française.
+  const label = (p: typeof active) =>
+    countryName(p?.destinationCountry?.countryName) || t('nav.myProject', { defaultValue: 'Mon projet' });
 
   const choose = (id: number) => {
     setActiveProjectId(id);

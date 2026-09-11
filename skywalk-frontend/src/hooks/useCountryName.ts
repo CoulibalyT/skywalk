@@ -97,3 +97,25 @@ export function useCountryNameIn() {
     [t],
   );
 }
+
+/**
+ * Pays précédé de son article défini : « la Suisse », « le Japon »,
+ * « les États-Unis ». La page pays disait « Découvrez Suisse » et
+ * « Pourquoi choisir Suisse ? » : le nom nu convient en anglais, pas en
+ * français. Repli sur le nom seul si la forme manque — c'est d'ailleurs
+ * la règle en anglais, où « Discover Switzerland » se passe d'article.
+ */
+export function useCountryNameThe() {
+  const { t } = useTranslation();
+
+  return useCallback(
+    (name?: string | null): string => {
+      if (!name) return '';
+      const country = resolveCountry(name);
+      if (!country) return name;
+      const key = country.i18nKey.replace('countries.', 'countriesThe.');
+      return t(key, { defaultValue: t(country.i18nKey, { defaultValue: country.name }) });
+    },
+    [t],
+  );
+}

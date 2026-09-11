@@ -5,7 +5,9 @@ import { useProjects } from '../features/projects/hooks/useProjectMutations';
 import { useActiveProject } from '../contexts/ActiveProjectContext';
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string, opts?: any) => opts?.defaultValue ?? key }),
+  useTranslation: () => ({
+    t: (key: string, opts?: any) => ({ 'countries.switzerland': 'Suisse' } as Record<string, string>)[key] ?? opts?.defaultValue ?? key,
+  }),
 }));
 
 const navigate = vi.fn();
@@ -80,5 +82,17 @@ describe('ProjectSwitcher', () => {
     setup({ projectsList: [{ idProject: 1, destinationCountry: null }], activeProjectId: 1 });
     render(<ProjectSwitcher />);
     expect(screen.getByText('Mon projet')).toBeInTheDocument();
+  });
+});
+
+describe('ProjectSwitcher — nom du pays traduit', () => {
+  it('affiche « Suisse » et non le nom anglais stocké en base', () => {
+    mockedUseProjects.mockReturnValue({
+      data: [{ idProject: 7, destinationCountry: { countryName: 'Switzerland' } }],
+    } as any);
+    mockedUseActiveProject.mockReturnValue({ activeProjectId: 7, setActiveProjectId } as any);
+    render(<ProjectSwitcher />);
+    expect(screen.getByText('Suisse')).toBeInTheDocument();
+    expect(screen.queryByText('Switzerland')).not.toBeInTheDocument();
   });
 });

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useCountryName } from './useCountryName';
+import { useCountryName, useCountryNameThe } from './useCountryName';
 
 // Registre des pays ACTIFS : le Japon en est absent, comme en base une fois
 // le pays archivé. C'est le cas qui doit passer par le repli i18n.
@@ -21,6 +21,7 @@ vi.mock('react-i18next', () => ({
       const table: Record<string, string> = {
         'countries.france': 'France',
         'countries.japan': 'Japon',
+        'countriesThe.france': 'la France',
       };
       return table[key] ?? opts?.defaultValue ?? key;
     },
@@ -80,5 +81,19 @@ describe('useCountryName', () => {
     i18nState.bundles = {};
     const { result } = renderHook(() => useCountryName());
     expect(result.current('Japan')).toBe('Japan');
+  });
+});
+
+describe('useCountryNameThe', () => {
+  it('précède le pays de son article défini', () => {
+    const { result } = renderHook(() => useCountryNameThe());
+    expect(result.current('France')).toBe('la France');
+  });
+
+  it('retombe sur le nom traduit quand la forme avec article manque', () => {
+    // Le registre mocké ne connaît que la France : un pays inconnu revient tel quel.
+    const { result } = renderHook(() => useCountryNameThe());
+    expect(result.current('Mali')).toBe('Mali');
+    expect(result.current('')).toBe('');
   });
 });

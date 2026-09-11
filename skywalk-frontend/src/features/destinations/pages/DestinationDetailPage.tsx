@@ -35,12 +35,13 @@ import AuthPromptCard from '../../../components/AuthPromptCard';
 import CostOfLivingTab from '../components/CostOfLivingTab';
 import { ISO2_TO_ISO3, getCurrentLocale, getLocale } from '../../../data/supportedCountries';
 import { getCityId } from '../cityId';
-import { useCountryName, useCountryNameIn } from '../../../hooks/useCountryName';
+import { useCountryName, useCountryNameIn, useCountryNameThe } from '../../../hooks/useCountryName';
 
 export function DestinationDetailPage() {
   const { countrySlug } = useParams<{ countrySlug: string }>();
   const localizedCountry = useCountryName();
   const countryIn = useCountryNameIn();
+  const countryThe = useCountryNameThe();
   const { isAuthenticated } = useAuth();
   const { t, i18n } = useTranslation();
   const dateLocale = getLocale(i18n.language);
@@ -177,12 +178,12 @@ export function DestinationDetailPage() {
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 mb-4">{t('services.destinationDetail.about')}</h3>
                       <p className="text-gray-600 leading-relaxed">
-                        {country.description || t('services.destinationDetail.defaultDescription', { country: localizedCountry(country.countryName) })}
+                        {country.description || t('services.destinationDetail.defaultDescription', { country: countryThe(country.countryName) })}
                       </p>
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('services.destinationDetail.whyChoose', { country: localizedCountry(country.countryName) })}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('services.destinationDetail.whyChoose', { country: countryThe(country.countryName) })}</h3>
                       <div className="grid sm:grid-cols-2 gap-4">
                         {[
                           t('services.destinationDetail.highlights.qualityOfLife'),

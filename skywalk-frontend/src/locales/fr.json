@@ -3818,6 +3818,24 @@
     "japan": "au Japon",
     "mali": "au Mali"
   },
+  "countriesThe": {
+    "france": "la France",
+    "canada": "le Canada",
+    "switzerland": "la Suisse",
+    "germany": "l'Allemagne",
+    "spain": "l'Espagne",
+    "italy": "l'Italie",
+    "portugal": "le Portugal",
+    "belgium": "la Belgique",
+    "netherlands": "les Pays-Bas",
+    "luxembourg": "le Luxembourg",
+    "unitedKingdom": "le Royaume-Uni",
+    "ireland": "l'Irlande",
+    "unitedStates": "les États-Unis",
+    "australia": "l'Australie",
+    "japan": "le Japon",
+    "mali": "le Mali"
+  },
   "notFound": {
     "title": "Cette page n’existe pas",
     "subtitle": "Le lien est peut-être périmé, ou l’adresse comporte une faute de frappe.",
